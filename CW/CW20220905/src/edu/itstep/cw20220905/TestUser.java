@@ -14,6 +14,5 @@ public class TestUser {
 //        User user1 = null;
 //        System.out.println(user1);
 
-
     }
 }

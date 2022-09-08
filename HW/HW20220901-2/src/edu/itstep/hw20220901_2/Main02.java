@@ -9,7 +9,7 @@ public class Main02 {
         int n = 0; // ряди
         int m = 0; // місця
         int k = 0; // кількість квитків, що потрібно придбати (сусідні місця в одному ряду)
-        Random random = new Random(); // зандомізатор для заповнення масива
+        Random random = new Random(); // рандомізатор для заповнення масива
         Scanner scanner = new Scanner(System.in); // створено для роботи з потоком - ввод даних з клавіатури
 
         System.out.print("Введіть кількість рядів у кінозалі - ");

@@ -5,8 +5,7 @@ public class Product {
     private String name = "no name";//null
     private int price;//0
 
-    //alt + insert
-
+    //alt + insert або ПКМ - Generate --- виклик меню для генерації сіщностей (конструктор, get, set)
 
     public Product() {
 //        System.out.println("constructor: " + this);
@@ -15,7 +14,7 @@ public class Product {
     }
     public Product(String name, int price) {
         this.name = name; // this.name - звертання до змінної екземпляра
-        this.price = price;
+        this.price = price; // this - ключове слово
     }
 
     public String getName() {
@@ -31,7 +30,7 @@ public class Product {
     }
 
     public void setPrice(int price) {
-        System.err.println("ERROR!");
+        System.err.println("ERROR!"); // виводить текст у консоль ЧЕРВОНОГО кольору
         this.price = price;
     }
 }
