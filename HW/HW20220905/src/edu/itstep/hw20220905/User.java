@@ -20,4 +20,8 @@ public class User {
         System.out.println("firstName : " + this.firstName + ", lastName : " + this.lastName + ", age : " + this.age);
     }
 
+    @Override
+    public String toString() {
+        return "firstName : " + this.firstName + ", lastName : " + this.lastName + ", age : " + this.age;
+    }
 }

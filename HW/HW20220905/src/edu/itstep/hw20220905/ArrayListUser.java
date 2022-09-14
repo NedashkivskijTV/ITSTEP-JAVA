@@ -1,5 +1,7 @@
 package edu.itstep.hw20220905;
 
+import java.util.Arrays;
+
 public class ArrayListUser {
     private User[] data;
     //private int size = 0;
@@ -14,11 +16,14 @@ public class ArrayListUser {
         } else {
             for (int i = 0; i < data.length; i++) {
                 //System.out.println(data[i].PrintUser());
+/*
                 if (data[i] == null) {
                     System.out.println("null");
                 } else {
                     data[i].PrintUser();
                 }
+*/
+                System.out.println(data[i] == null ? "null" : data[i].toString());
             }
         }
     }
@@ -28,6 +33,10 @@ public class ArrayListUser {
     }
 
     public User get(int index) {
+        if (this.data.length == 0) {
+            System.out.println("List of users is empty");
+            return null;
+        }
         if (index >= 0 && index < data.length) {
             return data[index];
         }
@@ -36,11 +45,13 @@ public class ArrayListUser {
     }
 
     public User getFirst() {
-        return data[0];
+        //return data[0];
+        return get(0);
     }
 
     public User getLast() {
-        return data[data.length - 1];
+        //return data[data.length - 1];
+        return get(data.length - 1);
     }
 
     public void addFirst(User user) {
@@ -70,18 +81,19 @@ public class ArrayListUser {
     }
 
     public void delete(int index) {
-        if (index >= 0 && index < data.length) {
-            User[] temp = new User[data.length - 1];
-            for (int i = 0; i < data.length; i++) {
-                if (i < index) {
-                    temp[i] = data[i];
-                } else if (i > index) {
-                    temp[i - 1] = data[i];
-                }
-            }
-            data = temp;
-        } else {
+        if (index < 0 || index >= data.length) {
             System.err.println("ERROR! Index out of range");
+            return;
         }
+        User[] temp = new User[data.length - 1];
+        for (int i = 0; i < data.length; i++) {
+            if (i < index) {
+                temp[i] = data[i];
+            } else if (i > index) {
+                temp[i - 1] = data[i];
+            }
+        }
+        data = temp;
     }
+
 }
