@@ -2,8 +2,8 @@ package edu.itstep.hw20220905;
 
 public class Main {
     public static void main(String[] args) {
-        testUser();
-        //testAverageAge();
+        //testUser();
+        testAverageAge();
     }
 
     public static void testAverageAge(){

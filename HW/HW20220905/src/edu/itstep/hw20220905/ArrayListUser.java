@@ -1,7 +1,5 @@
 package edu.itstep.hw20220905;
 
-import java.util.Arrays;
-
 public class ArrayListUser {
     private User[] data;
     //private int size = 0;
