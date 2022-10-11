@@ -22,4 +22,9 @@ public class Main {
         MyFrame myFrame = new MyFrame();
 
     }
+
+    public static void dbTest(){
+
+    }
 }
+

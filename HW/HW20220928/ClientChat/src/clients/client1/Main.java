@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         try {
-            String userName = setUserName("User");
+            String userName = setUserName("User"); // введення імені користувача та збереження у змінній
 
             Socket socket = new Socket("localhost", 55555);
             new Thread(new ListenThread(socket)).start();
@@ -19,7 +19,7 @@ public class Main {
 
             while(true){
                 String message = scannerConsole.nextLine();
-                printWriter.println(userName + ": " + message);
+                printWriter.println(userName + ": " + message); // включення до вихідних повідомлень інформації про користувача
                 printWriter.flush();
             }
 
@@ -29,7 +29,7 @@ public class Main {
 
     }
 
-    public static String setUserName(String nameDefault){
+    public static String setUserName(String nameDefault){ // метод - ввод імені користувача
         String nameTemp;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter a username or press Enter to use the default name (User) - ");
