@@ -7,7 +7,14 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        //dbTest();
 
+        MyFrame myFrame = new MyFrame();
+
+        //Db.deleteOllPlaces(1, 9); // очищення БД за № місця
+    }
+
+    public static void dbTest(){
         Db.createPlacesTable();
 
         Place p1 = new Place("2", "1111111");
@@ -19,11 +26,10 @@ public class Main {
         List<Place> places = Db.getAllPlaces();
         places.forEach(System.out::println);
 
-        MyFrame myFrame = new MyFrame();
-
-    }
-
-    public static void dbTest(){
+        System.out.println("======================================================");
+        Db.deleteOllPlaces(1, 9);
+        places = Db.getAllPlaces();
+        places.forEach(System.out::println);
 
     }
 }
