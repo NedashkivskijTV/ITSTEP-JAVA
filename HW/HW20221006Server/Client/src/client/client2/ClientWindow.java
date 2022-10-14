@@ -2,45 +2,38 @@ package client.client2;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ClientWindow extends JFrame {
-    // адреса сервера
-    private static final String SERVER_HOST = "localhost";
+    private static final String SERVER_HOST = "localhost"; // адреса сервера
 
-    // порт
-    private static final int SERVER_PORT = 3443;
+    private static final int SERVER_PORT = 3443; // порт
 
-    // сокет клієнта
-    private Socket clientSocket;
+    private Socket clientSocket; // сокет клієнта
 
-    // вхідне повідомлення
-    private Scanner inMessage;
+    private Scanner inMessage; // вхідне повідомлення
 
-    // вихідне повідомлення
-    private PrintWriter outMessage;
+    private PrintWriter outMessage; // вихідне повідомлення
+
+    private List<Place> places = new ArrayList<>(); // колекція зайнятих місць, отримана від сервера
+    private List<Place> placesSelectedByClient = new ArrayList<>(); // колекція місць, обраних клієнтом
+
+    private String messageToServer; // серіалізована колекція, підготовлена для відправлення на сервер
 
     // поля - елементи форми
-    private JTextField jtfMessage;
-    private JTextField jtfName;
-    private JTextArea jtaTextAreaMessage;
-    private JLabel jlNumberOfClients;
-    private JLabel jlNamesOfClients;
-
-    // ім'я клієнта
-    private String clientName = "";
-
-    // прапорець відправлення імені клієнта на сервер
-    private boolean isNameSending = false;
-
-    // геттер - отримання імені клієнта
-    public String getClientName() {
-        return clientName;
-    }
+    List<JButton> buttonList = new ArrayList<>(); // колекція кнопок - місць
+    JButton jButtonOk; // кнопка передачі данних
+    JTextField jTextField; // текстове поле
+    String tempString = ""; // тимчасове збереження вмісту текстового поля при отриманні/втраті фокуса
 
     // конструктор
     public ClientWindow() {
@@ -48,12 +41,13 @@ public class ClientWindow extends JFrame {
         serverConnection();
 
         // налаштування елементів форми
+        setFrame();
         formSettings();
+        addListeners();
 
         // у окремому потоці відбувається робота з сервером
         serverThread();
     }
-
 
     // підключення до сервера
     public void serverConnection() {
@@ -66,108 +60,127 @@ public class ClientWindow extends JFrame {
         }
     }
 
+    public void setFrame() {
+        setSize(400, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setTitle("Cinema");
+    }
+
     public void formSettings() {
         // налаштування елементів форми
-        setBounds(600, 300, 600, 500);
-        setTitle("Client");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jtaTextAreaMessage = new JTextArea();
-        jtaTextAreaMessage.setEditable(false);
-        jtaTextAreaMessage.setLineWrap(true);
-        JScrollPane jsp = new JScrollPane(jtaTextAreaMessage);
-        add(jsp, BorderLayout.CENTER);
+        JPanel jPanel = new JPanel(new BorderLayout(5, 5)); // основна панель
 
-        // label, що відображатиме кількість клієнтів у чаті
-        jlNumberOfClients = new JLabel("Кількість клієнтів у чаті:");
-        add(jlNumberOfClients, BorderLayout.NORTH);
+        JPanel jPanelForButtons = new JPanel(new GridLayout(3, 3)); // другорядна панель - панель для кнопок - місць
+        JPanel jPanelForTextFieldAndSubmitButton = new JPanel(new GridLayout(1, 2)); // другорядна панель - панель для текстового поля та кнопки ОК
 
-        // label - імені учасників чату
-        jlNamesOfClients = new JLabel("Список учасників чату:");
-        jlNamesOfClients.setVerticalAlignment(SwingConstants.TOP); // положення тексту у JLabel
-        //jlNamesOfClients.setPreferredSize(new Dimension(150, 500)); // розміри вікна
-        add(jlNamesOfClients, BorderLayout.EAST);
+        // генерування кнопок-мість та їх додавання до масиву кнопок
+        for (int i = 0; i < 9; i++) {
+            buttonList.add(new JButton("" + (i + 1)));
+        }
 
-        // кнопка відправлення
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        add(bottomPanel, BorderLayout.SOUTH);
-        JButton jbSendMessage = new JButton("Відправити");
-        bottomPanel.add(jbSendMessage, BorderLayout.EAST);
+        // додавання кнопок-місць з масиву кнопок до панелі кнопок
+        for (JButton jButton : buttonList) {
+            jButton.setBackground(ColorRGB.GREY.getColor()); // встановлення дефолтного кольору
 
-        // текстові поля
-        jtfMessage = new JTextField("Введіть ваше повідомлення: ");
-        bottomPanel.add(jtfMessage, BorderLayout.CENTER);
-        jtfName = new JTextField("Введіть ваше ім'я: ");
-        bottomPanel.add(jtfName, BorderLayout.WEST);
+            // додавання до панелі
+            jPanelForButtons.add(jButton);
+        }
 
-        // обробник події - натискання кнопки відправки повідомлення
-        jbSendMessage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageSendingWithConditions();
-            }
-        });
+        // ініціалізація текстового поля та кнопки ОК, а також їх приєднання до панелі
+        jButtonOk = new JButton("OK");
+        //jButtonOk.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
+        jTextField = new JTextField("Enter phone number");
+        jPanelForTextFieldAndSubmitButton.add(jTextField);
+        jPanelForTextFieldAndSubmitButton.add(jButtonOk);
 
-        // обробник події - при натисканні комбінації клавіш ctrl+S відбувається відправка повідомлення
-        KeyStroke keyStroke = KeyStroke.getKeyStroke("ctrl S"); // встанволення комбінації клавіш по якому спрацює подія
-        InputMap inputMap = jtfMessage.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW); // встановлення випадку спрацювання події - фокус на вікні
-        String key = "send message"; // вибір унікального ключа - зазвичай називається по дії, що відбуватиметься
-        inputMap.put(keyStroke, key); // вказується, що дана робота виконуватиметься по такій комбінації клавіш
-        ActionMap actionMap = jtfMessage.getActionMap(); // отримання об'єкта ActionMap - є у кожної jPanel...
-        actionMap.put(key, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageSendingWithConditions();
-            }
-        });
+        // приєднання другорядних панелей до основної
+        jPanel.add(jPanelForButtons, BorderLayout.CENTER);
+        jPanel.add(jPanelForTextFieldAndSubmitButton, BorderLayout.SOUTH);
 
-        // при фокусі поле повідомлення буде очищено
-        jtfMessage.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jtfMessage.setText("");
-            }
-        });
-
-        // при фокусі поле ім'я буде очищено
-        jtfName.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                //jtfName.setText("");
-                jtfName.setText(clientName);
-            }
-        });
-
-        // обробник події - закриття вікна клієнтського застосунку
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                try {
-                    // перевірка чи ім'я клієнта непусте та не дорівнює значенню за замовчуванням
-                    //if (!clientName.isEmpty() && clientName != "Введіть ваше ім'я: ") {
-                    if (!clientName.isEmpty() && !clientName.equals("Введіть ваше ім'я: ")) {
-                        outMessage.println(clientName + " вийшов з чату!");
-                    } else {
-                        outMessage.println("Участник вийшов з чату, не представившись!");
-                    }
-
-                    // відправка службового повідомлення, яке є ознакою того, що клієнт вийшов з чату
-                    //outMessage.println("##session##end##");
-                    outMessage.println("##session##end##" + clientName);
-                    outMessage.flush();
-                    outMessage.close();
-                    inMessage.close();
-                    clientSocket.close();
-                } catch (IOException exc) {
-                    //exc.printStackTrace();
-                }
-            }
-        });
-
-        // відображення форми
+        // приєднання основної панелі до вікна, візуалізація
+        add(jPanel);
         setVisible(true);
     }
 
+    // додавання подій до об'єктів форми
+    public void addListeners() {
+        // подія -- натискання кнопки місця - зміна кольору сірий-жовтий-сірий
+        for (JButton jButton : buttonList) {
+            jButton.addActionListener(e -> {
+                if (!Objects.equals(jButton.getBackground(), ColorRGB.RED.getColor()) &&
+                        !Objects.equals(jButton.getBackground(), ColorRGB.GREEN.getColor())) {
+                    if (Objects.equals(jButton.getBackground(), ColorRGB.YELLOW.getColor())) {
+                        jButton.setBackground(ColorRGB.GREY.getColor());
+                    } else {
+                        jButton.setBackground(ColorRGB.YELLOW.getColor());
+                    }
+                    //System.out.println(jButton.getBackground().toString());
+                }
+            });
+        }
+
+        // подія - натискання кнопки ОК
+        jButtonOk.addActionListener(e -> {
+            if (checkTextField()) {
+                List<JButton> buttonsPressed = buttonList
+                        .stream()
+                        .filter(b -> Objects.equals(b.getBackground(), ColorRGB.YELLOW.getColor()))
+                        .collect(Collectors.toList());
+                for (JButton jButton : buttonsPressed) {
+                    Place p = new Place(jButton.getText(), jTextField.getText());
+                    //Db.insertPlace(p1);
+                    placesSelectedByClient.add(p); // додавання обраних місць до колекції
+                    jButton.setBackground(ColorRGB.GREEN.getColor());
+                }
+
+                // відправлення повідомлення на сервер у разі, якщо натиснута принаймі 1 кнопка
+                if (placesSelectedByClient.size() != 0) {
+
+                    // серіалізація
+                    messageToServer = ProcessorGson.serializeListToString(placesSelectedByClient);
+                    placesSelectedByClient.clear(); // очищення колекції обраних клієнтом кнопок
+
+                    // відправлення на сервер
+                    sendMsg();
+                }
+                //------------------------------------------------------------------------------------------------------
+                jTextField.setText("Enter phone number");
+            }
+        });
+
+        // подія - якщо текстове поле знаходиться у фокусі -
+        // текст очищується/залишається введений рніше рядок,
+        // що зберігається у змінній екземпляра tempString
+        jTextField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                //super.focusGained(e);
+                jTextField.setText(tempString);
+            }
+        });
+
+        // подія - втрата фокуса на текстовому полі -
+        // збереження тексту, що до цього введений у текстовому полі
+        // до змінної екземпляра tempString
+        jTextField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                //super.focusLost(e);
+                tempString = jTextField.getText();
+            }
+        });
+    }
+
+    // перевірка коректності тексту у текстовому полі
+    public boolean checkTextField() {
+        String text = jTextField.getText();
+        if (text.equals("Enter phone number")) {
+            return false;
+        } else return !text.isEmpty();
+    }
+
+    // поток, що чекатиме на повідомлення від сервера
     public void serverThread() {
         new Thread(new Runnable() {
             @Override
@@ -179,59 +192,53 @@ public class ClientWindow extends JFrame {
                         if (inMessage.hasNext()) {
                             // читаємо нове повідомлення
                             String inMes = inMessage.nextLine();
-                            String clientsInChat = "Учасників у чаті - ";
-                            String clientsNames = "Список учасників чату :";
-                            if (inMes.indexOf(clientsInChat) == 0) {
-                                jlNumberOfClients.setText(inMes);
-                            } else if (inMes.contains(clientsNames)) {
-                                // при отриманні повідомлення, що містить список імен клієнтів
-                                //System.out.println("список отримано");
-                                //System.out.println(inMes);
-                                jlNamesOfClients.setText(inMes);
-                            } else {
-                                // виводимо повідомлення
-                                jtaTextAreaMessage.append(inMes);
-                                // додаємо рядок переходу
-                                jtaTextAreaMessage.append("\n");
-                            }
+                            // тестове повідомлення в консоль клієнта - отримане від сервера повідомлення
+                            System.out.println("Отримано повідомлення від сервера - ");
+                            System.out.println(inMes);
+
+                            // десеріалізувати повідомлення
+                            places = ProcessorGson.deserializeStringToList(inMes);
+
+                            // тестове повідомлення в консоль клієнта - отримана від сервера колекція
+                            System.out.println("Отримана колекція - ");
+                            places.forEach(System.out::println);
+
+                            // оновити вигляд клієнтського вікна
+                            loudOllPlaces(places);
+                            //--------------------------------------------------------------------------------------
                         }
                     }
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
 
-    // метод, що містить алгоритм попередніх переврок
-    // та команду на відправку повідомлення
-    public void messageSendingWithConditions() {
-        // якщо поля ім'я клієнта та повідомлення не пусті - відправляється повідомлення
-        if (!jtfMessage.getText().trim().isEmpty() && !jtfName.getText().trim().isEmpty()) {
-            clientName = jtfName.getText();
-            sendMsg();
-            // фокус на текстове поле з повідомленням
-            jtfMessage.grabFocus();
+    // відправлення повідомлення
+    public void sendMsg() {
+        // відправлення повідомлення
+        outMessage.println(messageToServer);
+        outMessage.flush();
+    }
+
+    // завантаження інформації (фарбування кнопок), що міститься
+    // у отриманому з сервера повідомленні (десеріалізований колекції)
+    public void loudOllPlaces(List<Place> places) {
+        for (JButton jButton : buttonList) {
+            for (Place place : places) {
+                paintTheButton(jButton, place);
+            }
         }
     }
 
-    // відправлення повідомлення
-    public void sendMsg() {
-        // формування повідомлення для відправлення на сервер
-        String messageStr = jtfName.getText() + ": " + jtfMessage.getText();
-
-        // відправлення на сервер імені клієнта
-        if (!isNameSending) {
-            outMessage.println("##client##name##" + clientName);
-            outMessage.flush();
-            jtfName.setEditable(false); // після відправки імені користувача на сервер поле стає незмінним
-            isNameSending = true;
+    // фарбування кнопок - при співпадінні номера кнопки форми та місця з колекції, отриманої від сервера,
+    // а також при відсутності попереднього фарбування у зелений колір (фарбується по натисканню кнопки ОК)
+    public void paintTheButton(JButton jButton, Place place) {
+        if (jButton.getText().equals(place.getNum()) &&
+                !Objects.equals(jButton.getBackground(), ColorRGB.GREEN.getColor())) {
+            jButton.setBackground(ColorRGB.RED.getColor());
         }
-
-        // відправлення повідомлення
-        outMessage.println(messageStr);
-        outMessage.flush();
-        jtfMessage.setText("");
     }
 
 }

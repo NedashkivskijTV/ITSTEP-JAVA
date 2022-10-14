@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server {
     static final int PORT = 3443; // порт, що буде прослуховуватись сервером
 
     private ArrayList<ClientHandler> clients = new ArrayList<>(); // список клієнтів, які будуть підключатись до сервера
-
-    private ArrayList<String> clientsNames = new ArrayList<>(); // список імен клієнтів, підключених до сервера
 
     Socket clientSocket = null; // сокет клієнта - поток, що підключатиметься до сервера по адресі(хосту) та порту
 
@@ -18,8 +17,27 @@ public class Server {
 
     // конструктор сервера
     public Server() {
+        // очищення БД (за бажанням користувача)
+        clearDb();
+
         // створення серверного сокета по визначеному порту
         serverCreation();
+    }
+
+    // очищення БД (за бажанням користувача)
+    public void clearDb(){
+        System.out.println("Очищення бази даних");
+        System.out.println("Для очищення наберіть YES та натисніть Enter");
+        System.out.print("Інше - запуск сервера без очищення - ");
+        Scanner scanner = new Scanner(System.in);
+        String choiceLine = scanner.nextLine();
+        if(choiceLine.equals("YES")){
+            Db.deleteOllPlaces(1, 9);
+            System.out.println("Базу данних очищено");
+        }
+        else{
+            System.out.println("Очищення бази данних відхилено");
+        }
     }
 
     // створення серверного сокета по визначеному порту
@@ -61,43 +79,9 @@ public class Server {
         }
     }
 
-    // видалення клієнта з колекції при виході з чату
+    // видалення клієнта з колекції при його виході з чату
     public void removeClient(ClientHandler client) {
-        //clients.remove(client);
+        clients.remove(client);
     }
 
-    // додавання імені нового клієнта до списку
-    public void addNewClientName(String clientName) {
-        //clientsNames.add(clientName);
-
-        // тестовий рядок для сервера
-        //getClientsNamesText();
-    }
-
-    // видалення імені клієнта зі списку
-    public void removeClientName(String clientName) {
-        //clientsNames.remove(clientName);
-
-        // тестовий рядок для сервера
-        //getClientsNamesText();
-    }
-
-    // список імен користувачів, що знаходяться у чаті -
-    // формування рядка з html тегами для коректного відображення у відповідній JPanel клієнта
-    // (вертикальний список з заголовком)
-    public String getClientsNamesString() {
-//        String[] namesString = {"<html>Список учасників чату :"};
-//        for (String clientsName : clientsNames) {
-//            namesString[0] = String.join("<br> ", namesString[0], clientsName);
-//        }
-//        namesString[0] = String.join(" ", namesString[0], "<html>");
-//        return namesString[0];
-        return "";
-    }
-
-    // тестове повідомлення в консоль сервера - список підключених клієнтів в рідок
-    public void getClientsNamesText() {
-//        System.out.print("Список учасників чату: ");
-//        System.out.println(String.join(" ", clientsNames));
-    }
 }

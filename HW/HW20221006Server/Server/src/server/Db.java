@@ -41,7 +41,6 @@ public class Db {
     public static void insertPlace(Place place) {
         try (Connection connection = DriverManager.getConnection(URL, USER_DB, PASSWORD);
              Statement statement = connection.createStatement()) {
-            //statement.execute("INSERT INTO ");
             String sql = String.format("INSERT INTO places(num, phone) VALUES('%s','%s')",
                     place.getNum(),
                     place.getPhone());

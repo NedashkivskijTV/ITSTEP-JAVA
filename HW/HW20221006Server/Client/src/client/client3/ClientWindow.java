@@ -1,8 +1,9 @@
-package client.client1;
+package client.client3;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
