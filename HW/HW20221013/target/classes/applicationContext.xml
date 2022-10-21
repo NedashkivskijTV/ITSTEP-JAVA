@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--    <context:annotation-config/>-->
+    <!--    <context:component-scan base-package="com.baeldung.applicationcontext"/>-->
+
+<!--    створення bean-а з використанням хардкоду через сетери-->
+    <bean id="profileSetters" class="org.example.Profile">
+        <property name="firstName" value="Anton"/>
+        <property name="lastName" value="Antonenko"/>
+        <property name="programmingLanguages">
+            <list>
+                <value>C++</value>
+                <value>C#</value>
+                <value>Java</value>
+                <value>JS</value>
+            </list>
+        </property>
+    </bean>
+
+<!--    створення bean-а з використанням хардкоду через конструктор-->
+    <bean id="profileConstructor" class="org.example.Profile">
+        <constructor-arg name="firstName" value="Petro"/>
+        <constructor-arg name="lastName" value="Petrenko"/>
+        <constructor-arg name="programmingLanguages">
+            <list>
+                <value>C++</value>
+                <value>C#</value>
+                <value>Java</value>
+                <value>JS</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+<!--    створення bean-а з використанням файлу myApp.properties через сетери - поелементне завантаження -->
+    <context:property-placeholder location="classpath:myApp.properties"/>
+
+    <bean id="profileFromFile" class="org.example.Profile">
+        <property name="firstName" value="${profile.firstName}"/>
+        <property name="lastName" value="${profile.lastName}"/>
+        <property name="programmingLanguages">
+            <list>
+                <value>${profile.programmingLanguages[0]}</value>
+                <value>${profile.programmingLanguages[1]}</value>
+                <value>${profile.programmingLanguages[2]}</value>
+                <value>${profile.programmingLanguages[3]}</value>
+            </list>
+        </property>
+    </bean>
+
+<!--    створення bean-а з використанням файлу myApp.properties через сетери - завантаження колекції -->
+    <bean id="profileFromFileOllCollection" class="org.example.Profile">
+        <property name="firstName" value="${profile.firstName}"/>
+        <property name="lastName" value="${profile.lastName}"/>
+        <property name="programmingLanguages" value="#{'${profile.programmingLanguages}'.split(',')}">
+        </property>
+    </bean>
+
+</beans>
