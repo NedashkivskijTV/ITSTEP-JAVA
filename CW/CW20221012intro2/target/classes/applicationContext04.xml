@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!--    <context:annotation-config/>-->
+<!--    <context:component-scan base-package="com.baeldung.applicationcontext"/>-->
+
+<!--    за замовчуванням використовується scope singleton - створюється 1 об'єкт, а кожного разу на запит повертається посилання на нього -->
+    <bean id="cat" class="org.example.ex04.Cat"></bean>
+
+<!--    scope="singleton" - використання даного атрибута дає результат, аналогічний попередньому -->
+    <bean id="catS" class="org.example.ex04.Cat" scope="singleton"></bean>
+
+<!--    scope="prototype" - кожного разу створюється новий об'єкт -->
+    <bean id="catP" class="org.example.ex04.Cat" scope="prototype"></bean>
+
+</beans>

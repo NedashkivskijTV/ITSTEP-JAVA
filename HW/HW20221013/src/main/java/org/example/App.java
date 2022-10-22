@@ -28,6 +28,5 @@ public class App
         for (String language : languages) {
             System.out.println(language);
         }
-
     }
 }
