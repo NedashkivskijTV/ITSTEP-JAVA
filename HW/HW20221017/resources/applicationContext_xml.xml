@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--    підключення файлу з даними-->
+    <context:property-placeholder location="myApp.properties"/>
+
+    <!--    реалізація через конструктор-->
+    <bean id="address" class="org.example.ex_xml.Address">
+        <constructor-arg name="city" value="${address.city}"/>
+        <constructor-arg name="street" value="${address.street}"/>
+        <constructor-arg name="buildingNumber" value="${address.buildingNumber}"/>
+    </bean>
+
+    <!--    реалізація через сетери-->
+    <bean id="user" class="org.example.ex_xml.User">
+        <property name="firstName" value="${user.firstName}"/>
+        <property name="lastName" value="${user.lastName}"/>
+        <property name="address" ref="address"/>
+    </bean>
+
+</beans>
