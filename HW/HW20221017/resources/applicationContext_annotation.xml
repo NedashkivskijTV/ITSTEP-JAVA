@@ -7,6 +7,7 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!--    пекедж, який потрібно сканувати на предмет наявності об'єктів, що використовуватимуться для створення бінів-->
     <context:component-scan base-package="org.example.ex_annotation"/>
 
     <!--    підключення файлу з даними-->
