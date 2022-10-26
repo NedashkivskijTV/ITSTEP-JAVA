@@ -11,3 +11,32 @@ CREATE TABLE questions(
 );
 
 select * from questions;
+
+------------------------------------------------------------------------------------
+
+
+CREATE DATABASE my_db_2;
+USE my_db_2;
+
+CREATE TABLE details(
+	id int primary key not null auto_increment,
+    city varchar(25),
+    email varchar(25),
+    phone varchar(25)
+);
+
+CREATE TABLE employees(
+	id int  primary key not null auto_increment,
+    details_id int unique,
+    first_name varchar(25),
+    last_name varchar(25),
+    department varchar(25),
+    foreign key(details_id) references details(id)
+);
+
+select * from details;
+select * from employees;
+
+------------------------------------------------------------------------------------
+
+

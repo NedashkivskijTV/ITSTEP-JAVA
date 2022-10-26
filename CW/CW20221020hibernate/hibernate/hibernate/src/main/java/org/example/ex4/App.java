@@ -8,7 +8,6 @@ public class App {
     public static void main(String[] args) {
         // ONE TO MANY
 
-
         SessionFactory factory = new Configuration()
                 .configure("hibernate3.cfg.xml")
                 .addAnnotatedClass(Employee.class)
