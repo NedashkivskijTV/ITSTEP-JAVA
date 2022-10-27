@@ -5,17 +5,70 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Phonebook {
 
-    public void start() {
-        System.out.println("HELLO, I'm Phonebook!");
+    private String[][] systemLines = new String[][]{
+            new String[]{"yes", "no", "y", "n", ""},
+            new String[]{"y", "yes", ""},
+    };
 
+    public void start() {
+        System.out.println("Програма Телефонний довідник");
+        System.out.println("Бажаєте розпочати роботу ? - " + stringMasToString(systemLines[0]));
+        while (lineCheck(lineInputControl(""), systemLines[1])) { // "y", "yes", ""
+            System.out.println("довідник");
+
+            System.out.println("Бажаєте продовжити роботу? - " + stringMasToString(systemLines[0]));
+        }
+        System.out.println("Роботу програми завершено");
         //create();
         //read();
         //update();
-        delete();
+        //delete();
+    }
+
+    private String lineInputControl(String message, String... correctLine) {
+        if (message == null || message.length() == 0) {
+            message = "Введіть yes/no та Enter";
+        }
+        if (correctLine == null || correctLine.length == 0) {
+            correctLine = systemLines[0]; // "yes", "no", "y", "n", ""
+        }
+        Scanner scanner = new Scanner(System.in);
+        String userLine = scanner.nextLine();
+        while (!lineCheck(userLine, correctLine)) {
+            System.out.println("\n" + message);
+            userLine = scanner.nextLine();
+        }
+        return userLine;
+    }
+
+    private boolean lineCheck(String line, String... possibleLines) {
+        for (String possibleLine : possibleLines) {
+            if (possibleLine.equalsIgnoreCase(line)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String stringMasToString(String... strings) {
+        if (strings.length == 0) {
+            return "";
+        }
+        StringBuffer strTemp = new StringBuffer("");
+        for (String string : strings) {
+            if(strTemp.length() != 0){
+                strTemp.append(" ");
+            }
+            strTemp.append(string.length() == 0 ? "Enter" : string);
+        }
+        return strTemp.toString();
     }
 
     private void create() {

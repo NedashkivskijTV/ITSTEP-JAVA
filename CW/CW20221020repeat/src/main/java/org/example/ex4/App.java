@@ -24,8 +24,8 @@ public class App {
 
         // CREATE ---------------------
         // Додавання пустого департамента
-        Department department1 = new Department("DEVELOPER", 1000, 5000);
-        session.save(department1);
+//        Department department1 = new Department("DEVELOPER", 1000, 5000);
+//        session.save(department1);
 
         // Додавання департамента з працівниками
         Department department2 = new Department("DESIGNER", 1000, 5000);
@@ -45,33 +45,33 @@ public class App {
 
         // READ ---------------------
         // отримання Department за id
-        Department department4 = session.get(Department.class, 1); // отримання об'єкта Департамент за id
+//        Department department4 = session.get(Department.class, 1); // отримання об'єкта Департамент за id
         //отримання колекції елементів Employee
-        for (Employee employee : department4.getEmployees()) {
-            System.out.println(employee);
-        }
+//        for (Employee employee : department4.getEmployees()) {
+//            System.out.println(employee);
+//        }
 
 
         // UPDATE ---------------------
         // 1 - при наявності об'єкта Employee
-        Employee employee_u = session.get(Employee.class, 3);
-        employee_u.setFirstName("Sirozhko");
+//        Employee employee_u = session.get(Employee.class, 3);
+//        employee_u.setFirstName("Sirozhko");
 
         // зміна зарплати усім розробникам на +100
-        Department department_u = session.get(Department.class, 1); // отримання об'єкта Департамент за id
-        department_u.getEmployees().forEach((e) -> e.setPrice(e.getPrice() + 100));
+//        Department department_u = session.get(Department.class, 1); // отримання об'єкта Департамент за id
+//        department_u.getEmployees().forEach((e) -> e.setPrice(e.getPrice() + 100));
 
 //        // 2 - Використання HQL - змінну витягати не потрібно - зміни вівдбудуться одразу в БД
 
 
         // DELETE ---------------------
         // 1 - при наявності об'єкта Employee
-        Employee employee_d = session.get(Employee.class, 3);
-        session.delete(employee_d); // видалення особи
+//        Employee employee_d = session.get(Employee.class, 3);
+//        session.delete(employee_d); // видалення особи
 
         // 2 - Використання HQL - змінну витягати не потрібно - зміни вівдбудуться одразу в БД
-        Department department_d = session.get(Department.class, 2);
-        session.delete(department_d); // видалення департамента з каскадним видаленням усіх пов'язаних працівників
+//        Department department_d = session.get(Department.class, 2);
+//        session.delete(department_d); // видалення департамента з каскадним видаленням усіх пов'язаних працівників
 
         session.getTransaction().commit(); // закриття сесії - знімок - збереження в БД раніше зроблених змін , навіть у разі виникнення помилки
 
