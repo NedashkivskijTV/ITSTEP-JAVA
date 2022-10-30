@@ -30,6 +30,10 @@ public class Contact {
         this.lastName = lastName;
     }
 
+    public Contact(Contact contact) {
+        this.id = contact.getId();
+    }
+
     public int getId() {
         return id;
     }
@@ -50,6 +54,10 @@ public class Contact {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return lastName + " " + firstName;
+    }
+
     public List<Phone> getPhones() {
         return phones;
     }
@@ -62,8 +70,17 @@ public class Contact {
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
-    public void addPhone(Phone phone){
+
+    public void addPhone(Phone phone) {
         phones.add(phone);
         phone.setContact(this);
+    }
+
+    public void addPhones(Phone... newPhones) {
+        for (Phone phone : newPhones) {
+            addPhone(phone);
+//            phones.add(phone);
+//            phone.setContact(this);
+        }
     }
 }
