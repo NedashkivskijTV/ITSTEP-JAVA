@@ -1,0 +1,35 @@
+h1{
+    color: darkred;
+}
+
+body{
+    background-color: aquamarine;
+    position: relative;
+}
+
+form{
+    width: 50%;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+div{
+    margin-bottom: 7px;
+}
+
+label{
+    width: 500px;
+    display: inline-block;
+}
+
+input{
+    width: 100%;
+}
+
+fieldset{
+    border-radius: 10px;
+    background-color: coral;
+}
