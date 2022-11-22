@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WishApp</string>
+    <string name="tvWish">Сlick on the button</string>
+    <string name="btnGetWish">Push me</string>
+</resources>

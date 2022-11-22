@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyCWApp-2</string>
+    <string name="say_hello">Hello World ! - string view</string>
+</resources>
