@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">PizzaHot</string>
+    <string name="tvMenu">Menu</string>
+    <string name="btnShowActivitySize">size and toppings</string>
+
+    <string name="tvPizza_1">Pancheta Gorgondzola</string>
+    <string name="tvDescriptionPizza_1">Tomato sauce, mozzarella cheese, gorgundzole cheese, smoked brisket, pear, arugula, almond flakes</string>
+    <string name="tvPizza_2">Meat Pizza</string>
+    <string name="tvDescriptionPizza_2">On tomato and mayonnaise sauces, mozzarella cheese, chicken fillet, smoked pork neck, mushrooms, olives, arugula</string>
+    <string name="tvPizza_3">Pizza Philadelphia</string>
+    <string name="tvDescriptionPizza_3">On tomato sauce with mozzarella, orphan sausage, cream cheese and Bulgarian pepper</string>
+    <string name="tvCountPizza">-</string>
 </resources>
