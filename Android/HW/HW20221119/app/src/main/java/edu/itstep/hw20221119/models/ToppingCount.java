@@ -1,6 +1,8 @@
 package edu.itstep.hw20221119.models;
 
-public class ToppingCount {
+import java.io.Serializable;
+
+public class ToppingCount implements Serializable {
     private PizzaTopping pizzaTopping;
     private int count;
 

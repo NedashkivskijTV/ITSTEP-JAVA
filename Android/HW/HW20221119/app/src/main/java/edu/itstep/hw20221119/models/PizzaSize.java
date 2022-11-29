@@ -12,4 +12,12 @@ public enum PizzaSize {
         this.sizeSm = sizeSm;
         this.margin = margin;
     }
+
+    public int getSizeSm() {
+        return sizeSm;
+    }
+
+    public double getMargin() {
+        return margin;
+    }
 }
