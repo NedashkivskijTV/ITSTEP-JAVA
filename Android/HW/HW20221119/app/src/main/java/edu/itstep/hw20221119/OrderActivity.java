@@ -44,6 +44,7 @@ public class OrderActivity extends AppCompatActivity {
         initData(); // ініціалізація первинних даних
     }
 
+    // ініціалізація змінних класу
     private void initView() {
         tvPizzaRecipe = findViewById(R.id.tvPizzaRecipe);
         tvPizzaSize = findViewById(R.id.tvPizzaSize);
@@ -57,6 +58,7 @@ public class OrderActivity extends AppCompatActivity {
         btnOrder = findViewById(R.id.btnOrder);
     }
 
+    // підключення слухачів/подій
     private void setListener() {
         Resources resources = getResources();
         btnOrder.setOnClickListener(view -> {
@@ -70,6 +72,7 @@ public class OrderActivity extends AppCompatActivity {
         });
     }
 
+    // ініціалізація даних Актівіті з використанням даних, отриманих в моделі
     private void initData() {
         // отримання об'єкта Intent, відправленого з попереднього актівіті -
         Intent intent = getIntent();
@@ -78,7 +81,9 @@ public class OrderActivity extends AppCompatActivity {
         // використовується у разі передачі даних через модель, що імплементує інтерфейс Serializable
         order = (Order) intent.getSerializableExtra(ConstantsStore.KEY_ORDER);
 
+        // отримання об'єкта Resources, що дозволяє звертатись до різних елементі проекту
         Resources resources = getResources();
+
         setTvPizzaRecipe(resources);
         setTvPizzaSize(resources);
         setTvPizzaAmount();
@@ -86,6 +91,7 @@ public class OrderActivity extends AppCompatActivity {
         setTvPrice(resources);
     }
 
+    // розрахунок вартості замовлення
     private void setTvPrice(Resources resources) {
         double priceToppings = 0;
         for (ToppingCount toppingCount : order.getToppingCountList()) {
@@ -100,6 +106,7 @@ public class OrderActivity extends AppCompatActivity {
         tvPrice.setText(newPrice);
     }
 
+    // ініціалізація поля, що відображає добавки та їх кількість
     private void setTvToppings(Resources resources) {
         if (order.getToppingCountList().size() > 0) {
             for (ToppingCount toppingCount : order.getToppingCountList()) {
@@ -111,6 +118,7 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    // пвертає рядок, що складається з назви добавки та її кількості
     private String toppingSelection(Resources resources, ToppingCount toppingCount) {
         if (PizzaTopping.MEAT == toppingCount.getPizzaTopping()) {
             return resources.getString(R.string.tvMeat) + " - " + toppingCount.getCount();
@@ -120,10 +128,12 @@ public class OrderActivity extends AppCompatActivity {
         return resources.getString(R.string.tvCheese) + " - " + toppingCount.getCount();
     }
 
+    // ініціалізація поля, що відображає кіькість замовлення піци
     private void setTvPizzaAmount() {
         tvPizzaAmount.setText(String.valueOf(order.getPizzaCount()));
     }
 
+    // ініціалізація поля, що відображає розмір піци
     private void setTvPizzaSize(Resources resources) {
         if (PizzaSize.LARGE == order.getPizzaSize()) {
             tvPizzaSize.setText(resources.getString(R.string.rBtnLarge));
@@ -134,6 +144,7 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    // ініціалізація поля, що відображає обраний рецепт піци
     private void setTvPizzaRecipe(Resources resources) {
         if (PizzaRecipe.PANCHETA_GORGONDZOLA == order.getPizzaRecipe()) {
             tvPizzaRecipe.setText(resources.getString(R.string.tvPizza_1));

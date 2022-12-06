@@ -48,6 +48,7 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         initData(); // ініціалізація первинних даних
     }
 
+    // ініціалізація змінних класу
     private void initView() {
         rgPizzaSize = findViewById(R.id.rgPizzaSize);
 
@@ -64,6 +65,7 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         btnMakeOrder = findViewById(R.id.btnMakeOrder);
     }
 
+    // підключення слухачів/подій
     private void setListener() {
         rgPizzaSize.setOnCheckedChangeListener(this::setPizzaSize);
 
@@ -77,6 +79,7 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         btnMakeOrder.setOnClickListener(this);
     }
 
+    // вибір розміру піци - обробка радіо-групи (користувач обирає радіобатони)
     private void setPizzaSize(RadioGroup radioGroup, int id) {
         if(id == R.id.rBtnLarge){
             order.setPizzaSize(PizzaSize.LARGE);
@@ -87,6 +90,7 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    // ініціалізація даних, отримання даних з моделі
     private void initData() {
         // отримання об'єкта Intent, відправленого з попереднього актівіті -
         Intent intent = getIntent();
@@ -94,9 +98,12 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         // отримання даних з об'єкта Intent з використанням методу, getSerializableExtra -
         // використовується у разі передачі даних через модель, що імплементує інтерфейс Serializable
         order = (Order) intent.getSerializableExtra(ConstantsStore.KEY_ORDER);
+
+        // встановлення первинного значення на радіобатон, що відповідає малому розміру піци
         order.setPizzaSize(PizzaSize.SMALL);
     }
 
+    // метод підключення слухачів/подій (onClick) до елементів
     @Override
     public void onClick(View view) {
         int btn_id = view.getId();
@@ -117,6 +124,8 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    // зміна кількості добавок до піци та приєднання/знищення добавки у колекції toppingCountList
+    // в залежності від обраної кількості (0 - знищується, >0 - додається)
     private void changeToppingsCount(int btn_id) {
         switch (btn_id) {
             case R.id.ivMinusMeat: {
@@ -145,9 +154,11 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
+        // додавання добавок до колеції
         changeOrderToppingsList();
     }
 
+    // додавання/виключення добавок до колеції
     private void changeOrderToppingsList() {
         order.getToppingCountList().clear();
         if (!tvCountMeat.getText().equals("0")) {
@@ -162,11 +173,13 @@ public class PizzasizeActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    // зміна кількості добавки в залежності від обраної математичної операції (додати/відняти)
     private void changeAllToppingsCounter(TextView tvCounter, boolean isPlus) {
         int counter = Integer.parseInt(tvCounter.getText().toString());
         tvCounter.setText(isPlus ? (counter < 3 ? "" + (counter + 1) : "" + counter) : (counter > 0 ? "" + (counter - 1) : "" + counter));
     }
 
+    // запуск наступного Актівіті, передача даних до нього з використанням моделі order
     private void showOrderActivity() {
         Intent intent = new Intent(this, OrderActivity.class);
         intent.putExtra(ConstantsStore.KEY_ORDER, order);
