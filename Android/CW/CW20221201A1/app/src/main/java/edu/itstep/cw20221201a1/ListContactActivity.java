@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 public class ListContactActivity extends AppCompatActivity {
 
-    // змінні класу, що відповідають активним елементам Актівіті
+    // змінні екземпляра класу, що відповідають активним елементам Актівіті
     // елемент для відображення списку
     private ListView lvContact;
 

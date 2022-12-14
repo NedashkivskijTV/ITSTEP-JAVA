@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ListContactActivity2 extends AppCompatActivity {
 
-    // змінні класу, що відповідають активним елементам Актівіті
+    // змінні екземпляра класу, що відповідають активним елементам Актівіті
     // елемент для відображення списку
     private ListView lvContact;
 

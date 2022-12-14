@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int count; // лічильник, збільшується при натисканні на кнопку
 
-    // поля - змінні класу, що відповідають активним елементам Activity
+    // поля - змінні екземпляра класу, що відповідають активним елементам Activity
     private TextView tvCount;
     private Button btnCount;
     private Button btnNext;

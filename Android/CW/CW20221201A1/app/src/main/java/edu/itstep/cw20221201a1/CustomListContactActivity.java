@@ -3,13 +3,16 @@ package edu.itstep.cw20221201a1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class CustomListContactActivity extends AppCompatActivity {
 
-    // змінні класу, що відповідають активним елементам Актівіті
+    // змінні екземпляра класу, що відповідають активним елементам Актівіті
     // елемент для відображення списку
     private ListView lvPhoneBook;
 
@@ -40,5 +43,22 @@ public class CustomListContactActivity extends AppCompatActivity {
 
         // Встановлення адаптера у список
         lvPhoneBook.setAdapter(adapter);
+
+        // Підключення слухача до елемента списка
+        lvPhoneBook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            //public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+                // Отримання елемента за позицією
+                Contact contact = contacts.get(position);
+
+                // Виведення потрібної інф
+                Toast.makeText(CustomListContactActivity.this,
+                        "" + contact.getLastName() + " - " + contact.getPhone(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }
