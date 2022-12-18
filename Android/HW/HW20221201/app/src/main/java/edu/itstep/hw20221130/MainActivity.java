@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,11 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private int timePosition = 0; // позиція обраного користувачем часу відправлення в масиві автобусних рейсів (за замовчуванням = 0)
 
     private boolean isRotate = false; // змінна, що використовується у якості індикатора, щодо зміни положення пристрою
-    //private boolean notSetFirstSettings = true; // змінна, що використовується у якості індикатора ------------------------------------------
     private boolean directionChanged = false;
 
     // лічильник кількості викликів методу створення адаптера для спінера вибору часу виїзду
-    // використовується для забезпеченні коректної роботи при переносі даних між Актівіті в наслідок
+    // використовується для забезпеченні коректної роботи при переносі даних між Актівіті внаслідок
     // зміни положення екрана
     private int counterTime;
 
@@ -73,12 +75,58 @@ public class MainActivity extends AppCompatActivity {
         databaseRequest(); // запит до БД на отримання колекції напрямків
         initView(); // ініціалізація даних
 
-
-        makeAdapters(); // створення адаптерів на елементів Spinner
         initData(); // ініціалізація первинних даних
+        makeAdapters(); // створення адаптерів на елементів Spinner
         setListener(); // підключення слухачів
 
         dataLoadAfterScreenRotation(savedInstanceState); // завантаження даних після зміни положення екрана
+    }
+
+    // Перевизначення методу для відображення меню (Spinner/List)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        // Отримання об'єкта MenuInflater - об'єкт для наповнення/надування меню
+        MenuInflater inflater = getMenuInflater();
+
+        // звернення до наповнювача меню через метод inflate() - наповни меню наступними об'єктами
+        // приймає 2 параметри
+        // 1 - макет меню - підготовлений заздалегідь файл (spinner_to_list.xml)
+        // 2 - об'єкт menu, що отримується в параметрах поточного методу
+        inflater.inflate(R.menu.spinner_to_list, menu);
+
+        // при поверненні true - меню відображатиметься, згенерований код повертає false
+        return true;
+    }
+
+    // Перевизначення методу для підключення слухачів по натисканню на елементи меню
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // отриманн id обраного елемента меню (приходить у параметрах)
+        int id = item.getItemId();
+
+        // реалізація алгоритмів відповідно до обраного пункту меню 
+        switch (id) {
+            case R.id.menuItemSpinner: {
+                Toast.makeText(this, "The application works in spinner mode", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            case R.id.menuItemList: {
+                //startActivity(new Intent(this, MainActivityList.class));
+                // створення об'єкта intent
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+
+                setDataToOrderTicket(); // наповнення моделі даними
+
+                // передача моделі з даними до intent
+                intent.putExtra(ConstantsStore.KEY_ORDER_TICKET, orderTicket);
+                startActivity(intent); // запуск Актівіті
+
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // збереження даних при зміні положення екрана
@@ -134,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
         tvOneTicketCost = findViewById(R.id.tvOneTicketCost);
 
         // лічильник кількості білетів
-        ibMinusPlaceCounter = findViewById(R.id.ibMinusPlaceCounter);
-        ibPlusPlaceCounter = findViewById(R.id.ibPlusPlaceCounter);
+        ibMinusPlaceCounter = findViewById(R.id.ibMinusPlCounter);
+        ibPlusPlaceCounter = findViewById(R.id.ibPlusPlCounter);
         tvPlaceCount = findViewById(R.id.tvPlaceCount);
     }
 
@@ -190,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         String date = tvDate.getText().toString();
         String[] dateToArr = date.split("\\.");
 
+        //Toast.makeText(this, "date=" + date, Toast.LENGTH_SHORT).show();
         String[] departureTimeToArr = timeSelected.split(":");
         Date dateTimeSelected = new GregorianCalendar(
                 Integer.parseInt(dateToArr[2]),
@@ -239,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                 makeAdapterDepartureTime();
 
                 // збереження даних до моделі
-                // TODO
                 // дані зберігіються в моделі у окремому методі
             }
 
@@ -263,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
                 showOneTicketCost(position);
 
                 // збереження даних до моделі
-                // TODO
                 // дані зберігіються в моделі у окремому методі
             }
 
@@ -337,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
         tvOneTicketCost.setText(String.valueOf(oneTicketCost));
 
         // збереження даних у моделі
-        // TODO
         // дані зберігаються до моделі в окремому методі
     }
 
@@ -365,7 +411,6 @@ public class MainActivity extends AppCompatActivity {
                         checkSelectedTimeAndShowOutOfDateAlertDialog();
 
                         // збереження даних у моделі (дата виїзду)
-                        // TODO
                         // дані зберігаються до моделі в окремому методі
                     }
                 },
@@ -387,14 +432,28 @@ public class MainActivity extends AppCompatActivity {
         String date = new SimpleDateFormat(getResources().getString(R.string.pattern_date)).format(d);
         tvDate.setText(date);
         // збереження даних до моделі
-        // TODO
         // дані зберігаються до моделі в окремому методі
 
         // первинне значення лічильника кількості білетів
         tvPlaceCount.setText(String.valueOf(1));
         // збереження даних до моделі
-        // TODO
         // дані зберігаються до моделі в окремому методі
+
+        // Ініціалізація даних у разі переходу дане Актівіті через натиснення пункта меню Spinner
+        Intent intent = getIntent();
+        OrderTicket tempOrderTicket = (OrderTicket) intent.getSerializableExtra(ConstantsStore.KEY_ORDER_TICKET);
+        if (tempOrderTicket != null) {
+            //Toast.makeText(this, "NULL", Toast.LENGTH_SHORT).show();
+            directionPosition = tempOrderTicket.getDirectionPosition();
+            timePosition = tempOrderTicket.getTimePosition();
+            timeSelected = tempOrderTicket.getDepartureTime();
+
+            tvOneTicketCost.setText(tempOrderTicket.getOneTicketCost());
+            tvDate.setText(tempOrderTicket.getDateOfDirection());
+            tvPlaceCount.setText(tempOrderTicket.getCountPlaces());
+
+            directionChanged = tempOrderTicket.isDirectionChanged();
+        }
 
     }
 
@@ -405,7 +464,6 @@ public class MainActivity extends AppCompatActivity {
         tvPlaceCount.setText(newCounter);
 
         // збереження даних до моделі
-        // TODO
         // дані зберігаються до моделі в окремому методі
     }
 
