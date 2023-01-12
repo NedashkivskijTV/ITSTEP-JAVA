@@ -7,9 +7,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostsActivity extends AppCompatActivity {
 
@@ -38,11 +43,38 @@ public class PostsActivity extends AppCompatActivity {
                 titles // дані (поки відсутні)
         );
 
+        lvPosts.setAdapter(adapter);
+
+        // Отримання даних з сервера
+        NetworkService
+                .getInstance()
+                .getApi()
+                .getAllPosts()
+                .enqueue(new Callback<List<Post>>() {
+                    @Override
+                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                        posts = response.body();
+                        for (Post post : posts) {
+                            titles.add(post.getTitle());
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                    }
+                });
+
+
         // Підключення події по натисканню на елемент списка (можливо у вигляді лямбда-функції)
         lvPosts.setOnItemClickListener((adapterView, view, position, id) -> {
             long userId = posts.get(position).getUserId();
-
+            // отримали id користувача, який написав цей пост
             // TODO
+
+            Toast.makeText(this, String.valueOf(userId), Toast.LENGTH_SHORT).show();
 
         });
     }

@@ -8,6 +8,7 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -18,6 +19,19 @@ import java.util.Properties;
 @EnableWebMvc // активує функціонал MVC, без нього не функціонує валідація та інші інструменти MVC – аналог рядка у файлі applicationContext.xml <mvc:annotation-driven/>
 @EnableTransactionManagement // налаштування, що активує функціонал, який використовується для відкривання а закривання сесій – аналог рядка у файлі applicationContext.xml - <tx:annotation-driven transaction-manager="transactionManager"/>
 public class MyConfig {
+
+    /**
+     * Бін, що потрібен для відображення підготовлених представлень (додаватиме до вказуваних у коді імен файлів
+     * відповідний префікс (шлях до файлу) та суфікс – розширення файлу)
+     * @return
+     */
+    @Bean
+    public InternalResourceViewResolver internalResourceViewResolver(){
+        InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
+        internalResourceViewResolver.setPrefix("/WEB-INF/view/");
+        internalResourceViewResolver.setSuffix(".jsp");
+        return internalResourceViewResolver;
+    }
 
     /**
      * Бін (id=«dataSource») від класу ComboPooledDataSource – відповідає за з’єднання з БД
