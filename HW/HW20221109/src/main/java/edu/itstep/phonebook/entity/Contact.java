@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "contacts")
+@Entity // позначає сутність - на основі даного об'єкта буде створено бін
+@Table(name = "contacts") // зв'язок сутності з таблицею БД
 public class Contact {
 
     @Id // позначає первинний ключ
@@ -20,8 +20,21 @@ public class Contact {
     private String lastName;
 
     //@OneToMany(cascade = CascadeType.ALL, mappedBy = "contact")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "contact")
-    private List<Phone> phones = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "contact") // анотація встановлює вид зв'язків,
+    // що використовуються між таблицями Contact та Phone -  слід розуміти, що має бути обрана анотація,
+    // що відображає зв'язок від поточного класу (Contact) до пов'язаного класу (Phone),
+    // тобто у одного контакта можуть бути декілька телефонів (у класі Phone буде обрано @ManyToOne)
+    // ––– АТРИБУТ mappedBy = " contact" пов'язує даний клас з класом у якому зберігається
+    // вторинний ключ - Phone та передається назва поля, у атрибуті @JoinColumn якого описується
+    // принцип об'єднання таблиць (вторинний ключ)
+    // ––– КАСКАДНІСТЬ - CascadeType.ALL - при видаленні контакта буде видалено усі пов'язані телефони
+    // (загалом, при визначенні даної властивості потрібно виходити від ЗАДАЧІ!!!)
+    // ––– АТРИБУТ fetch = FetchType.EAGER – встановлює підхід при спробі отримання об’єкта Contact
+    // з пов’язаними сутностями Phone (за замовчуванням Hibernate використовує лінивий підхід до
+    // виборки, тобто він не завантажує дочірні сутності при спробі отримання батьківської сутності –
+    // генерується помилка LazyInitializationException),
+    // одним зі шляхів виправлення проблеми є встановлення стратегії виборки разом з анотацією @OneToMany
+    private List<Phone> phones = new ArrayList<>(); // поле для зберігання інф про пов'язані з даним класом сутності - у контакта може бути багато телефонів
 
     public Contact() {
     }
@@ -72,6 +85,10 @@ public class Contact {
                 '}';
     }
 
+    /**
+     * метод додавання телефону до контакта, також додає телефону інф про контакт
+     * @param phone
+     */
     public void addPhone(Phone phone) {
         phones.add(phone);
         phone.setContact(this);
@@ -80,8 +97,6 @@ public class Contact {
     public void addPhones(Phone... newPhones) {
         for (Phone phone : newPhones) {
             addPhone(phone);
-//            phones.add(phone);
-//            phone.setContact(this);
         }
     }
 }

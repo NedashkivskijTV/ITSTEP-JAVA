@@ -20,10 +20,31 @@ public class PhoneServiceImpl implements PhoneService{
         return phoneRepository.getAllPhones_Repository();
     }
 
+    // Метод працює з даними усіх таблиць !!! -------
     @Override
     @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
-    public void saveOrUpdatePhone(Phone phone) {
-        phoneRepository.saveOrUpdatePhone_Repository(phone);
+    public List<Phone> getAllContactPhones(int contactId) {
+        return phoneRepository.getAllContactPhones_Repository(contactId);
+    }
+
+// НЕКОРЕКТНИЙ МЕТОД - додає телефон без прив'язки до контакта, при редагуванні у поле з id контакта вносить null
+//    @Override
+//    @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
+//    public void saveOrUpdatePhone(Phone phone) {
+//        phoneRepository.saveOrUpdatePhone_Repository(phone);
+//    }
+
+    // Метод працює з даними усіх таблиць !!! -------
+    @Override
+    @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
+    public void saveContactsPhone(int contactId, Phone phone) {
+        phoneRepository.saveContactsPhone_Repository(contactId, phone);
+    }
+    // Метод працює з даними усіх таблиць !!! -------
+    @Override
+    @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
+    public void updateContactsPhone(int contactId, Phone phone) {
+        phoneRepository.updateContactsPhone_Repository(contactId, phone);
     }
 
     @Override
@@ -32,9 +53,23 @@ public class PhoneServiceImpl implements PhoneService{
         phoneRepository.deletePhoneById_Repository(id);
     }
 
+
+    // Метод працює з даними усіх таблиць !!! -------
+    @Override
+    @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
+    public void deleteContactsPhoneById(int contactId, int phoneId) {
+        phoneRepository.deleteContactsPhoneById_Repository(contactId, phoneId);
+    }
+
     @Override
     @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
     public Phone getPhoneById(int id) {
         return phoneRepository.getPhoneById_Repository(id);
+    }
+
+    @Override
+    @Transactional // анотація для підключення біна HibernateTransactionManager що здійснюватиме відкриття та закриття сесії - додається простір імен javax.transaction.Transactional
+    public Phone getContactsPhoneById(int contactId, int phoneId) {
+        return phoneRepository.getContactsPhoneById_Repository(contactId, phoneId);
     }
 }
