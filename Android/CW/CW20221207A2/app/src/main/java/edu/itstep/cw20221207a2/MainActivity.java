@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         // Реалізація коду, щодо отримання інф про 1 пост після відпрацювання методу onCreate
+        // Реалізація інтерфейсу PlaceholderAPI, в якому описані методи, що використовуватимуться для отримання даних з сервера
+        // їх реалізацію робити не потрібно, реалізацію надає Retrofit
         PlaceholderAPI placeholderAPI = NetworkService.getInstance().getApi(); // отримання placeholderAPI - реалізація інтерфейса PlaceholderAPI
 
         // Створення об'єкта Call за допомогою якого буде здійснено запит, створюється за допомогою методу getPostById
@@ -56,14 +58,19 @@ public class MainActivity extends AppCompatActivity {
         //Call<Post> call = placeholderAPI.getPostById(2); // виклик методу отримання поста за id, повертає Call - об'єкт, що дозволяє виконувати асінхронний код (реалізовано на багатопоточності)
         Call<Post> call = placeholderAPI.getPostById(randomPostPosition); // виклик методу отримання поста за id, повертає Call - об'єкт, що дозволяє виконувати асінхронний код (реалізовано на багатопоточності)
 
-        // поставити запит в чергу (запитів може бути багато), в параметри приймається callBack - функція, яка буде викликана пізніше - це інтерфейс, що має два методи
+        // поставити запит в чергу (запитів може бути багато), в параметри приймається Callback - функція, яка буде викликана пізніше - це інтерфейс, що має два методи onResponse() та onFailure
         // методи виконуватимуться не в ГОЛОВНОМУ потоці, та не заважатимуть працювати з телефоном - графіка не зависне
         call.enqueue(new Callback<Post>() {
-            // Метод виконається в момент отримання результату з сервера
+
+            // Метод виконається в момент отримання результату запиту з сервера
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 Post post = response.body(); // повертає результат запиту
-                tvPost.setText(post.getTitle());
+                // Є можливість отримати не тільки дані, але і
+                // code - код результату - код статусу – 5 категорій (1-інформативна, 2-успіх, 3-redirection (перенаправлення), 4-помилки клієнта, 5-помилки сервера)
+                // message - рядок повідомлення, пов'язаного з кодом (створено, виконано, вдало ...)
+
+                tvPost.setText(post.getTitle()); // Відображення заголовка поста у відповідному полі
 
                 // НЕвидимий прогресбар
                 progressBar.setVisibility(View.INVISIBLE);
@@ -77,6 +84,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }
