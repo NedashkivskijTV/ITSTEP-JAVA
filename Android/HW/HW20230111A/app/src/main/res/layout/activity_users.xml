@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#D6B0A5"
     android:layout_height="match_parent"
     tools:context=".UsersActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvListOfUsers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List Of Users"
+        android:text="@string/tvListOfUsers"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,5 +28,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tvListOfUsers" />
 </androidx.constraintlayout.widget.ConstraintLayout>

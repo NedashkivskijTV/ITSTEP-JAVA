@@ -4,13 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +15,6 @@ import java.util.Map;
 public class UsersActivity extends AppCompatActivity {
 
     private ListView lvUsers;
-    //private ArrayAdapter<String> adapter;
     private SimpleAdapter adapter;
     private List<User> users = new ArrayList<>();
     private List<Map<String, String>> usersNames = new ArrayList<>();
@@ -30,8 +24,27 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
+        loudDataFromMainActivity();
+
+        initMapCollection();
+
+        lvUsers = findViewById(R.id.lvUsers);
+
+        createAndSetAdapter();
+
+        setListeners();
+    }
+
+    // Отримання даних з попередньго Актівіті - використовується об'єкт Intent
+    private void loudDataFromMainActivity() {
         Intent intent = getIntent();
-        users = (List<User>) intent.getSerializableExtra("usersList");
+        //users = (List<User>) intent.getSerializableExtra("usersList");
+        //users = (List<User>) intent.getSerializableExtra(ConstantsStore.USER_LIST);
+        users = intent.getParcelableArrayListExtra(ConstantsStore.USER_LIST);
+    }
+
+    // Формування колекції Map для відображення у simple_list_item_2
+    private void initMapCollection() {
         Map<String, String> map;
         for (User user : users) {
             map = new HashMap<>();
@@ -39,9 +52,10 @@ public class UsersActivity extends AppCompatActivity {
             map.put("userName", user.getUsername());
             usersNames.add(map);
         }
+    }
 
-        lvUsers = findViewById(R.id.lvUsers);
-
+    // Створення та підключення Адаптера
+    private void createAndSetAdapter() {
         adapter = new SimpleAdapter(
                 this,
                 usersNames,
@@ -51,7 +65,10 @@ public class UsersActivity extends AppCompatActivity {
         );
 
         lvUsers.setAdapter(adapter);
+    }
 
+    // Встановлення слухача - клік по елементу списка
+    private void setListeners() {
         lvUsers.setOnItemClickListener((adapterView, view, position, id) -> {
             //Toast.makeText(this, "pos="+position + " id=" + id, Toast.LENGTH_SHORT).show();
             //Toast.makeText(this, "phone="+users.get(position).getPhone(), Toast.LENGTH_SHORT).show();
@@ -60,7 +77,8 @@ public class UsersActivity extends AppCompatActivity {
             userPhone.add(users.get(position).getPhone());
 
             Intent newIntent = new Intent(UsersActivity.this, PhoneActivity.class);
-            newIntent.putStringArrayListExtra("userPhone", userPhone);
+            //newIntent.putStringArrayListExtra("userPhone", userPhone);
+            newIntent.putStringArrayListExtra(ConstantsStore.USER_INFO, userPhone);
             startActivity(newIntent);
         });
     }

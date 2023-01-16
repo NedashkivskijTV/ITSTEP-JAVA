@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,37 +34,48 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Ініціалізація (отримання за id) змінних екземпляра класу
-        tvHelloMessage = findViewById(R.id.tvHelloMessage);
-        btnGetUsers = findViewById(R.id.btnGetUsers);
-        pbGetUsers = findViewById(R.id.pbGetUsers);
-
+        initView();
 
         // Підключення слухачів
         btnGetUsers.setOnClickListener(this::getUsersAndGoNextActivity);
     }
 
+    private void initView() {
+        tvHelloMessage = findViewById(R.id.tvHelloMessage);
+        btnGetUsers = findViewById(R.id.btnGetUsers);
+        pbGetUsers = findViewById(R.id.pbGetUsers);
+    }
+
+    // Отримання даних з сайту, наповнення моделі та перехід до UsersActivity
     private void getUsersAndGoNextActivity(View view) {
-        pbGetUsers.setVisibility(View.VISIBLE);
+        pbGetUsers.setVisibility(View.VISIBLE); // прогресбар - видимий
 
         PlaceholderAPI placeholderAPI = NetworkService.getInstance().getApi();
         Call<List<User>> call = placeholderAPI.getAllUsers();
-        call.enqueue(new Callback<List<User>>() {
+
+        call.enqueue(new Callback<List<User>>() { // Метод виконається в момент отримання результату з сервера
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) { // метод, що виконається після отримання відповіді
                 users = response.body();
 
-                pbGetUsers.setVisibility(View.INVISIBLE);
+                pbGetUsers.setVisibility(View.INVISIBLE); // прогресбар - НЕвидимий
 
-                Intent intent = new Intent(MainActivity.this, UsersActivity.class);
-                intent.putParcelableArrayListExtra("usersList", (ArrayList<? extends Parcelable>) users);
-                startActivity(intent);
+                goUsersActivity();
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) { // Метод виконається при виникненні помилки
                 Toast.makeText(MainActivity.this, "ERROR: " + t, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
+    // Перехід до наступного Актівіті
+    private void goUsersActivity(){
+        Intent intent = new Intent(MainActivity.this, UsersActivity.class);
+        //intent.putParcelableArrayListExtra("usersList", (ArrayList<? extends Parcelable>) users);
+        intent.putParcelableArrayListExtra(ConstantsStore.USER_LIST, (ArrayList<? extends Parcelable>) users);
+        startActivity(intent);
+    }
+
 }
