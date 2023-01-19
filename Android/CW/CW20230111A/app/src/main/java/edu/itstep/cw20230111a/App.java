@@ -14,7 +14,8 @@ public class App extends Application { // клас, що реалізує пат
     public void onCreate() { // спрацьовує при запуску додатка
         super.onCreate();
         instance = this;
-        database = Room.databaseBuilder(this, AppDatabase.class, "it-company").allowMainThreadQueries()
+        database = Room.databaseBuilder(this, AppDatabase.class, "it-company")
+                .allowMainThreadQueries() // дозвіл на виконання запитів до БД у головному потоці (використовується для невеликих БД) - у разі відсутності ROOM генерує помилку !!!
                 .build();
     }
 

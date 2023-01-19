@@ -9,12 +9,12 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao // вказує на те, що даний інтерфейс містить описи методів для взаємодії з БД
-public interface EmployeeDao {
+public interface EmployeeDao { // опис взаємодії з БД
 
-    @Query("SELECT * FROM employee") // у параметрах анотації прописується запит (виконуватиме Room DB), котрий буде виконано при виклику методу getAll
+    @Query("SELECT * FROM employees") // у параметрах анотації прописується запит (виконуватиме Room DB), котрий буде виконано при виклику методу getAll
     List<Employee> getAll();
 
-    @Query("SELECT * FROM employee WHERE id = :id") // у параметрах анотації прописується запит (виконуватиме Room DB), котрий буде виконано при виклику методу getById, потребує предачі параметра при виклику даного методу
+    @Query("SELECT * FROM employees WHERE id = :id") // у параметрах анотації прописується запит (виконуватиме Room DB), котрий буде виконано при виклику методу getById, потребує предачі параметра при виклику даного методу
     Employee getById(long id);
 
     @Insert // вказує на виконання ппевної CRUD операції - вставка

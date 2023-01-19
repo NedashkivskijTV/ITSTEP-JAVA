@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Виклик методів взаємодії з БД (CRUD операції)
-        // Вставка
+        // Вставка - імітація роботи з БД - при запуску Актівіті спрацює даний метод, який містить код
+        // щодо додавання до щойноствреної (або створеної ранішне при попередніх запусках) БД об'єкта Employee
         Employee employee = new Employee();
         //employee.id = 1;
         employee.name = "John Smith";
