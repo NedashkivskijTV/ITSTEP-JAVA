@@ -32,6 +32,6 @@ public class MainActivity extends AppCompatActivity {
         employee.name = "John Smith";
         employee.salary = 10000;
 
-        employeeDao.insert(employee);
+        employeeDao.insert(employee); // команда на додавання даних до БД
     }
 }
