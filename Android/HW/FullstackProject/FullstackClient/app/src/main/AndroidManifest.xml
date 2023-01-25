@@ -17,7 +17,14 @@
         android:theme="@style/Theme.FullstackClient"
         tools:targetApi="31">
         <activity
-            android:name=".ListActivity"
+            android:name=".NewNoteActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".AllNotesActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
