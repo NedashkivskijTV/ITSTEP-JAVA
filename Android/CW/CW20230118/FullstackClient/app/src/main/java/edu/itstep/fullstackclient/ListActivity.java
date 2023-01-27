@@ -134,8 +134,10 @@ public class ListActivity extends AppCompatActivity {
                         }
                     });
 
-            return false;
+            //return false;
+            return true; // ВАЖЛИВО !!! - у випадку встановлення на елемент двох подій OnItemClick та OnItemLongClick – остання подія має повертати true, інакше при довгому натисканні на елемент спрацьовуватимуть обидві події
         });
+
     }
 
     // Алгоритм видалення елемента за id

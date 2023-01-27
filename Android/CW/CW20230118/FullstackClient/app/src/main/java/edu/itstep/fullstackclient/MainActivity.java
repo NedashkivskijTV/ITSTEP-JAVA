@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvEmployee;
     private Button btnShawAllEmployees;
     private Button btnNewEmployee;
+    private Button btnShawImageActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
         tvEmployee = findViewById(R.id.tvEmployee);
         btnShawAllEmployees = findViewById(R.id.btnShawAllEmployees);
         btnNewEmployee = findViewById(R.id.btnNewEmployee);
+        btnShawImageActivity = findViewById(R.id.btnShawImageActivity);
 
+
+        // Додавання об'єкта до колекції/БД - (об'єкт захардкоджений)
         btnNewEmployee.setOnClickListener(v -> {
             NetworkService
                     .getInstance()
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     });
         });
 
-
+        // При завантаженні Актівіті - Отримання колекції елементів та відображення інформаціїї, отриманої з одного з них за id
 
         //EmployeeApi employeeApi = NetworkService.getInstance().getEmployeeApi(); // отримання EmployeeApi - класу, що реалізує інтерфейс EmployeeApi, що в свою чергу, описує методи взаємодії з БД
         //employeeApi.getAllEmployees().enqueue(...); // виклик методу, що поверне список усіх елементів Employee, даний метод повертає об'єкт Call, який ставиться у чергу на виконання - для виконання потребує виклику методу .enqueue()
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkService
                 .getInstance()
                 .getEmployeeApi()
-                .getAllEmployees()
+                .getAllEmployees() // отримання колекції об'єктів
                 .enqueue(new Callback<List<Employee>>() {
 
                     // Метод виконається в момент отримання результату запиту з сервера
@@ -77,9 +81,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        // Перехід до Актівіті для відображення колекції
         btnShawAllEmployees.setOnClickListener(v -> {
             startActivity(new Intent(this, ListActivity.class));
         });
-    }
 
+
+        // Перехід до Актівіті для роботи з графічними файлами
+        btnShawImageActivity.setOnClickListener(v -> {
+            startActivity(new Intent(this, ImageActivity.class));
+        });
+    }
 }

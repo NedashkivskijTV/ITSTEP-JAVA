@@ -8,11 +8,14 @@ import java.util.List;
 
 public interface EmployeeDAO extends JpaRepository<Employee, Integer> {
 
+    // Створення запитів з використанням здравої логіки
     List<Employee>findAllByLastName(String lastName);
 
     List<Employee>findAllBySalaryBetween(int a, int b); // пошук по зарплаті між двома значеннями
 
-    @Query(value = "select * from emplouees", nativeQuery = true)
+
+    // Створення запиту з використанням SQL - діалекту
+    @Query(value = "select * from employees", nativeQuery = true)
     List<Employee>getSome();
 
 }

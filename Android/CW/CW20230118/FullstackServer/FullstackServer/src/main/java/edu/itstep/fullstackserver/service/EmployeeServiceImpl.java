@@ -13,7 +13,7 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired // на сетер/конструктор/поле, вказує на створення залежності за допомогою даного сетера/конструктора/поля.
-    private EmployeeDAO employeeDAO;
+    private EmployeeDAO employeeDAO; // Впроваджена залежність від суеності EmployeeDAO (також має назву Repository)
 
 
     @Override

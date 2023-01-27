@@ -2,8 +2,10 @@ package edu.itstep.fullstackserver.controller;
 
 import edu.itstep.fullstackserver.entity.Employee;
 import edu.itstep.fullstackserver.service.EmployeeService;
+import edu.itstep.fullstackserver.service.ImageStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,10 +15,14 @@ public class MyController {
 
     @Autowired
     // на сетер/конструктор/поле, вказує на створення залежності за допомогою даного сетера/конструктора/поля.
-    private EmployeeService employeeService;
+    private EmployeeService employeeService; // впровадження залежності - забезпечує роботу з БД
+
+    @Autowired
+    // на сетер/конструктор/поле, вказує на створення залежності за допомогою даного сетера/конструктора/поля.
+    private ImageStorageService imageStorageService;
 
     @GetMapping("/employees")
-    // // спеціалізований варіант анотації @RequestMapping - забезпечує спрацювання методу при відправленні на вказану у атрибутах URL-адресу запиту типу GET
+    // спеціалізований варіант анотації @RequestMapping - забезпечує спрацювання методу при відправленні на вказану у атрибутах URL-адресу запиту типу GET
     public List<Employee> getAllEmployee() {
 //        List<Employee> employees = employeeService.getAllEmployee();
 //        return employees;
@@ -87,5 +93,17 @@ public class MyController {
             return message;
     }
 */
+
+    @PostMapping("/upload-image")
+    // спеціалізований варіант анотації @RequestMapping - забезпечує спрацювання методу при відправленні на вказану у атрибутах URL-адресу запиту типу POST
+    public String uploadFile(@RequestParam(value = "file") MultipartFile file){
+        // @RequestParam(value = "file") // під час відправки картинки буде вказуватись аналогічний параметр-ключ що ідентифікує файл із зображенням
+
+        System.out.println("Файл із зображенням отримано"); // тестове виведення у консоль про отримання файлу
+
+        imageStorageService.uploadImage(file); //алгоритм збереження файлу (через впроваджену залежність imageStorageService)
+
+        return "File SAVED!"; // повернення рядка про закінчення роботи методу, можна нічого не вілправляти
+    }
 
 }
