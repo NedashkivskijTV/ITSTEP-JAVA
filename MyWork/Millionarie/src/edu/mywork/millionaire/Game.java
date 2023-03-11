@@ -20,10 +20,12 @@ public class Game {
     private boolean promptQuestionReplacing = true;
     // - дзвінок другу
     private boolean promptCallToFriend = true;
-    // - +1 - підказка від спонсора - питання до друга у залі (ще один дзвінок другу)
+    // - підказка від спонсора
     private boolean promptFromSponsor = true;
 
-
+    /**
+     * Основний метод застосунку
+     */
     public void start() {
         boolean isFirstEnter = true;
         System.err.println("\n\nІНТЕЛЕКТУАЛЬНА ГРА \"ХТО ХОЧЕ СТАТИ МІЛЬЙОНЕРОМ\"");
@@ -50,6 +52,9 @@ public class Game {
         }
     }
 
+    /**
+     * Встановлення первинних налаштувань перед початком гри
+     */
     public void newGameSettings() {
         prompt50x50 = true;
         promptCallToFriend = true;
@@ -57,6 +62,9 @@ public class Game {
         promptFromSponsor = true;
     }
 
+    /**
+     * Виведення правил гри
+     */
     public void showGameRules() {
         System.out.print("Бажаєте ознайомитись з правилами гри, " + user.getName() + " ? (y/n) - ");
         if (lineCheck(lineInputControl(""), systemLines[1])) { // "y", "yes", ""
@@ -71,6 +79,9 @@ public class Game {
         }
     }
 
+    /**
+     * Реєстрація користувача
+     */
     public void userRegistration() {
         System.out.print("Введіть Ваше ім'я або натисніть Enter, \nщоб залишити значення за замовчуванням (" + user.getName() + ") - ");
 
@@ -82,6 +93,9 @@ public class Game {
         }
     }
 
+    /**
+     * Реалізація алгоритму гри "Хто бажає стати мільйонером"
+     */
     public void game() {
         System.out.println("\nРозпочнемо гру! Мільйонером бажає стати " + user.getName());
         downloadQuestions();
@@ -160,6 +174,13 @@ public class Game {
         }
     }
 
+    /**
+     * Реалізація алгоритму роботи з підказками
+     *
+     * @param questionDifficulty - QuestionDifficulty - об'єкт "питання/складність" після задавання якого обирається підказка
+     * @return - QuestionDifficulty - повернення об'єкта "питання/складність" після обробки обраної підказки (може відрізнятись від заданого питання
+     * в результаті обрання підказки "заміна питання")
+     */
     public QuestionDifficulty usePrompt(QuestionDifficulty questionDifficulty) {
         QuestionDifficulty questionTemp = questionDifficulty;
         String userChoice;
@@ -264,11 +285,21 @@ public class Game {
         return questionTemp;
     }
 
+    /**
+     * Виведення результатів гри
+     */
     public void gameResult() {
         System.out.println("\nГРУ ЗАВЕРШЕНО, " + user.getName());
         System.out.println("\nВи заробили наступну суму грошей - $" + user.getPrizeMoney());
     }
 
+    /**
+     * Контроль коректності вводу користувачем інф з клавіатури (метод працює виключно з введеним рядком - типом String)
+     *
+     * @param message     - String - Повідомлення, що виводиметься після некоректного вводу
+     * @param correctLine - String[] - Аргумент змінної довжини - колекція рядків, що трактуються, як коректні
+     * @return - String - Рядок, введений користувачем, що співрадає з 1 елементом колекції коректних рядків - коректних варіантів вводу
+     */
     public String lineInputControl(String message, String... correctLine) {
         if (message == null || message.length() == 0) {
             message = "Введіть yes/no та Enter";
@@ -285,10 +316,20 @@ public class Game {
         return userLine;
     }
 
+    /**
+     * Перевірка приналежності рядка до колекції рядків
+     *
+     * @param line          - рядок, що перевіряється на приналежність до колекції
+     * @param possibleLines - колекція рядків
+     * @return - повернення логічного значення у разі приналежності/відсутності у колекції
+     */
     public boolean lineCheck(String line, String... possibleLines) {
         return List.of(possibleLines).stream().anyMatch(l -> l.equalsIgnoreCase(line));
     }
 
+    /**
+     * Отримання колекції питань з бази даних та формування блоку з 15 питань для проведення 1 гри
+     */
     public void downloadQuestions() {
         //отримання усіх запитань з БД
         //List<Question> questionsTemp = DataBase.getQuestionFromFile(); // з файлу
@@ -324,6 +365,12 @@ public class Game {
         }
     }
 
+    /**
+     * Визначення найближчої (меншої) суми, що не згорає відносно складності поточного питання
+     *
+     * @param questionDifficulty - поточне питання
+     * @return - положення у перечисленні ENUM Difficulty, об'єкта що відповідає найближчої суми (меншої), що не згорає
+     */
     public int getLastFireproofPrice(QuestionDifficulty questionDifficulty) {
         if (questionDifficulty.getDifficulty().isFireproof()) {
             return questionDifficulty.getDifficulty().getPrice();
@@ -335,6 +382,25 @@ public class Game {
         }
         return 0;
     }
+
+
+    /**
+     * Формування колекції відповідей поточного завдання та їх рандомне розміщення у ній
+     *
+     * @param question - поточне питання
+     */
+    public void setAnswers(QuestionDifficulty question) {
+        answers = Arrays.asList(question.getQuestion().getRightAnswer(),
+                question.getQuestion().getAnswer1(),
+                question.getQuestion().getAnswer2(),
+                question.getQuestion().getAnswer3());
+        // перемішування питань у списку рандомну кількість раз
+        Random random = new Random();
+        for (int i = 0; i < (random.nextInt(11) + 1); i++) {
+            Collections.shuffle(answers);
+        }
+    }
+
 
     public User getUser() {
         return user;
@@ -354,18 +420,6 @@ public class Game {
 
     public void setAnswers(List<String> answers) {
         this.answers = answers;
-    }
-
-    public void setAnswers(QuestionDifficulty question) {
-        answers = Arrays.asList(question.getQuestion().getRightAnswer(),
-                question.getQuestion().getAnswer1(),
-                question.getQuestion().getAnswer2(),
-                question.getQuestion().getAnswer3());
-        // перемішування питань у списку рандомну кількість раз
-        Random random = new Random();
-        for (int i = 0; i < (random.nextInt(11) + 1); i++) {
-            Collections.shuffle(answers);
-        }
     }
 
     public boolean isPrompt50x50() {
