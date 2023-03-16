@@ -58,7 +58,6 @@ public class Main01 {
         numbersString.sort(String::compareTo); // сортування - використання вбудованого у тип методу (пропонується як заміна попередньому варіанту) - за зростанням
         //numbersString.forEach(System.out::println); // перебір елементів колекції у циклі  forEach
         printList(numbersString);
-
     }
 
     public static void printList(List<String> list){
@@ -66,5 +65,4 @@ public class Main01 {
             System.out.print(s + " ");
         }
     }
-
 }
