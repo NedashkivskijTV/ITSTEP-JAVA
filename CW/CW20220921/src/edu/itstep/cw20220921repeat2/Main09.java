@@ -37,6 +37,6 @@ public class Main09 {
             System.out.println(wordInEnglish == null ? "The word is absent in the dictionary": "A translation of a word - " + wordInEnglish);
         }while(true);
 
-        System.out.println("The program is completed");
+        System.out.println("\nThe program is completed");
     }
 }
