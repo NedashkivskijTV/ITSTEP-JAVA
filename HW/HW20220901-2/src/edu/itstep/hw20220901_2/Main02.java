@@ -72,14 +72,19 @@ public class Main02 {
                         System.out.println(i);
                     }
                     System.out.print("place : ");
-                    for (int l = j; l < j + k && l < m; l++) {
+                    //for (int l = j; l < j + k && l < m; l++) { // цикл виводить усі групи вільних місць - при потрібних 2 місцях, у ряду, де пусті 1-4 місця виведе place : 1 2, place : 2 3, place : 3 4 ...
+                    //    System.out.print(l + "  ");
+                    //}
+                    for (int l = j; l < m; l++) { // виводить весь діапазон пустих місць у ряду - при потрібних 2 місцях, у ряду, де пусті 1-4 місця виведе place : 1  2  3  4
+                        j = l;
+                        if(cinema[i][l] == 1){
+                            break;
+                        }
                         System.out.print(l + "  ");
                     }
                     System.out.println();
                 }
             }
         }
-
-
     }
 }

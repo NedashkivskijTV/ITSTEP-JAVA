@@ -15,6 +15,7 @@ public class Controller {
 
         Predicate<Integer> predicate1 = (v) -> {
             // отримання локальної змінної та змінної екземпляра в тілі лямбди
+
             // 1 - використання змінної екземпляра - дозволяється читання та зміна
             System.out.println(instanceVariable); // old instance - можливе і отримання значення і його зміна в ході виконання
             instanceVariable = "new instance";
@@ -24,10 +25,12 @@ public class Controller {
             System.out.println(localVariable); // old local - підкреслена змінна - константне значення - НЕ ЗАСТОСОВУЄТЬСЯ якщо потрібна зміна значення данної змінної під час виконання коду
             //localVariable = "new local"; // помилка
 
+
             // 2 - використання массиву - дозволяється читання та зміна
             System.out.println(localVariableMass[0]); // old localMass
             localVariableMass[0] = "new localMass";
             System.out.println(localVariableMass[0]); // new localMass
+
 
             // 3 - створення копії локальної змінної - дозволяється читання та зміна
             String copy = localVariable;
@@ -52,10 +55,12 @@ public class Controller {
                 System.out.println(localVariable); // old local - підкреслена змінна - константне значення - НЕ ЗАСТОСОВУЄТЬСЯ якщо потрібна зміна значення данної змінної під час виконання коду
                 //localVariable = "new local"; // помилка
 
+
                 //2 - використання массиву - дозволяється читання та зміна
                 System.out.println(localVariableMass[0]); // new local
                 localVariableMass[0] = "new localMassAnonymous";
                 System.out.println(localVariableMass[0]); // new localMassAnonymous
+
 
                 // 3 - створення копії локальної змінної - дозволяється читання та зміна
                 String copy = localVariable;
@@ -66,6 +71,7 @@ public class Controller {
                 return integer > 0;
             }
         };
+
         // тестування вищевикладеного коду
         predicate1.test(7);
         System.out.println("-----------------------------------------------------------------------------------------");
